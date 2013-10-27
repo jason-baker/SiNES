@@ -6,6 +6,7 @@
 #define SINES_PLATFORM_H
 
 #ifdef WIN32        /* Windows Systems. */
+    #define _CRT_SECURE_NO_WARNINGS 1
     #ifndef WIN32_LEAN_AND_MEAN
         #define WIN32_LEAN_AND_MEAN
     #endif
@@ -15,10 +16,10 @@
 #endif
 
 #ifndef TRUE
-    #define TRUE 1
+    #error TRUE not defined
 #endif
 #ifndef FALSE
-    #define FALSE 0
+    #error FALSE not defined
 #endif
 
 #endif                          /* END: HEADER GUARD */
