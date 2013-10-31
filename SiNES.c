@@ -4,6 +4,7 @@
 
 #include "platform.h"
 #include "SiNES_types.h"
+#include "LR35902\ops.hpp"
 #include <stdio.h>
 
 typedef struct _MEDIA {
@@ -24,11 +25,11 @@ void log(char * msg, ...)
 /**
  * Load media.
  *
- * @param szPath : SINES_USZ    [IN]    The path to the image.
+ * @param szPath : usz    [IN]    The path to the image.
  *
  * @return @TODO figure out return type
  */
-MEDIA loadMedia(SINES_USZ szPath)
+MEDIA loadMedia(usz szPath)
 {
     MEDIA newMedia = {0};
     newMedia.pfImage = fopen((char*)szPath, "rb");
@@ -45,12 +46,14 @@ MEDIA loadMedia(SINES_USZ szPath)
 int main(char **argv, int argc)
 {
     char arrMediaPath[] = "chronotrigger.smc";
-    SINES_USZ szMediaPath = (SINES_USZ)arrMediaPath;
+    usz szMediaPath = (usz)arrMediaPath;
     /* @TODO Argument Parsing */
     MEDIA media = loadMedia(szMediaPath);
 
     log("Details From Media");
     log("media.hasHeader: %s", BTS(media.hasHeader));
+
+    exec_op();
 
     return 0;
 }
