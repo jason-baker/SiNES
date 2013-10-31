@@ -12,15 +12,14 @@ INCLUDE_DIRECTORIES(
 SET(include
     xplat/SiNES_types.h
     xplat/platform.h
-    processors/Nintendo/LR35902/ops.hpp
-    processors/Nintendo/LR35902/registers.hpp
+    processors/Nintendo/LR35902/ops.h
+    processors/Nintendo/LR35902/registers.h
 )
 
 # List of source files.
 SET(src
     SiNES.c
-    processors/Nintendo/LR35902/ops.cpp
-    processors/Nintendo/LR35902/registers.cpp
+    processors/Nintendo/LR35902/ops.c
 )
 
 # Generate the executable

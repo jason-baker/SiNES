@@ -4,7 +4,7 @@
 
 #include "platform.h"
 #include "SiNES_types.h"
-#include "LR35902\ops.hpp"
+#include "LR35902\ops.h"
 #include <stdio.h>
 
 typedef struct _MEDIA {
