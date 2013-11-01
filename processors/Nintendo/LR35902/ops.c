@@ -3,12 +3,13 @@
  */
 
 #include "SiNES_types.h"
+#include "cpu.h"
 #include "ops.h"
-#include "registers.h"
 
-typedef void (*LR35902_OP_FN)();
-
-#define PRE_OP_FUNC static void
+/**
+ * Operation function pointer.
+ */
+typedef void (*LR35902_OP_FN)(LR35920_CPU *c);
 
 /*
 FORMAT for processor operation functions.
@@ -26,28 +27,353 @@ N - Half Carry Flag : If the lower nibble carried in the math operation.
 C - Carry Flag      : Set if a carry occurred from the last math operation or register A is smaller in with CP.
 */
 
+#define PRE_OP_FUNC static void
+
+/**
+ * Convert 2 8 bit registers into a 16 bit register.
+ */
+#define GET_REG16(REG1, REG2) (((REG1) << 8) | (REG2))
+
+/*********************************************************************************************************************\
+| @TODO                                                                                                       |
+\*********************************************************************************************************************/
+
 // 0x00     nop         [1  |  4] [- - - -]
-PRE_OP_FUNC nop()
-{}
+PRE_OP_FUNC nop(LR35920_CPU *c) {
+    /* @TODO CLOCK HANDLING */
+}
 
-// 0x01     ld_bc_d16   [3  | 12] [- - - -]
-PRE_OP_FUNC ld_bc_d16()
-{}
+/*********************************************************************************************************************\
+| 8 Bit Load Commands                                                                                                 |
+\*********************************************************************************************************************/
 
-// 0x02     ld_de_d16   [1  |  8] [- - - -]
-PRE_OP_FUNC ld_bc_a()
-{}
+/**
+ * Define a function for putting an immediate 8 bit value from the stack into a register.
+ * op_ld_r_n    [2  |  8] [- - - -]
+ */
+#define op_ld_r_n(REG)                      \
+PRE_OP_FUNC ld_##REG##_n(LR35920_CPU *c) { \
+    /* @TODO CLOCK HANDLING */              \
+    /* c->r.REG = c->mem_read((c->r.pc)++); */     \
+}
+op_ld_r_n(b)    /* OPCODE: 0x06 */
+op_ld_r_n(c)    /* OPCODE: 0x0E */
+op_ld_r_n(d)    /* OPCODE: 0x16 */
+op_ld_r_n(e)    /* OPCODE: 0x1E */
+op_ld_r_n(h)    /* OPCODE: 0x26 */
+op_ld_r_n(l)    /* OPCODE: 0x2E */
+op_ld_r_n(a)    /* OPCODE: 0x3E */
+#undef op_ld_r_n
+
+/**
+ * Define a function for putting an immediate 8 bit value from the stack into a register.
+ * op_ld_r_n    [1  |  8] [- - - -]
+ */
+#define op_ld_rr_a(REGH, REGL)                      \
+PRE_OP_FUNC ld_##REGH##REGL##_a(LR35920_CPU *c) {   \
+    /* @TODO CLOCK HANDLING */                      \
+    /* c->r.a = c->mem_read(GET_REG16((c->r.REGH, c->r.REGL)); */     \
+}
+op_ld_rr_a(b,c)     /* OPCODE: 0x02 */
+op_ld_rr_a(d,e)     /* OPCODE: 0x12 */
+#undef op_ld_rr_a
+
+/**
+ * Define a function for putting an immediate 8 bit value from the stack into address at HL.
+ * OPCODE: 0x36
+ * ld_hl_n   [2  | 12] [- - - -]
+ */
+PRE_OP_FUNC ld_hl_n(LR35920_CPU *c) {
+    /* @TODO CLOCK HANDLING */
+    /* c->mem_write(GET_REG16((c->r.h, c->r.l), c->r.REG), c->mem_read((c->r.pc)++)); */
+}
+
+/**
+ * Define a function for moving value in REG2 to REG1.
+ * op_ld_r_r    [1  |  4] [- - - -]
+ */
+#define op_ld_r_r(REG1, REG2)                       \
+PRE_OP_FUNC ld_##REG1##_##REG2(LR35920_CPU *c) {    \
+    /* @TODO CLOCK HANDLING */                      \
+    /* c->r.REG1 = c->r.REG2 */                          \
+}
+/* 0x4- OPCODES */
+op_ld_r_r(b, b) /* OPCODE: 0x40 */
+op_ld_r_r(b, c) /* OPCODE: 0x41 */
+op_ld_r_r(b, d) /* OPCODE: 0x42 */
+op_ld_r_r(b, e) /* OPCODE: 0x43 */
+op_ld_r_r(b, h) /* OPCODE: 0x44 */
+op_ld_r_r(b, l) /* OPCODE: 0x45 */
+op_ld_r_r(b, a) /* OPCODE: 0x47 */
+op_ld_r_r(c, b) /* OPCODE: 0x48 */
+op_ld_r_r(c, c) /* OPCODE: 0x49 */
+op_ld_r_r(c, d) /* OPCODE: 0x4A */
+op_ld_r_r(c, e) /* OPCODE: 0x4B */
+op_ld_r_r(c, h) /* OPCODE: 0x4C */
+op_ld_r_r(c, l) /* OPCODE: 0x4D */
+op_ld_r_r(c, a) /* OPCODE: 0x4F */
+/* 0x5- OPCODES */
+op_ld_r_r(d, b) /* OPCODE: 0x50 */
+op_ld_r_r(d, c) /* OPCODE: 0x51 */
+op_ld_r_r(d, d) /* OPCODE: 0x52 */
+op_ld_r_r(d, e) /* OPCODE: 0x53 */
+op_ld_r_r(d, h) /* OPCODE: 0x54 */
+op_ld_r_r(d, l) /* OPCODE: 0x55 */
+op_ld_r_r(d, a) /* OPCODE: 0x57 */
+op_ld_r_r(e, b) /* OPCODE: 0x58 */
+op_ld_r_r(e, c) /* OPCODE: 0x59 */
+op_ld_r_r(e, d) /* OPCODE: 0x5A */
+op_ld_r_r(e, e) /* OPCODE: 0x5B */
+op_ld_r_r(e, h) /* OPCODE: 0x5C */
+op_ld_r_r(e, l) /* OPCODE: 0x5D */
+op_ld_r_r(e, a) /* OPCODE: 0x5F */
+/* 0x6- OPCODES */
+op_ld_r_r(h, b) /* OPCODE: 0x60 */
+op_ld_r_r(h, c) /* OPCODE: 0x61 */
+op_ld_r_r(h, d) /* OPCODE: 0x62 */
+op_ld_r_r(h, e) /* OPCODE: 0x63 */
+op_ld_r_r(h, h) /* OPCODE: 0x64 */
+op_ld_r_r(h, l) /* OPCODE: 0x65 */
+op_ld_r_r(h, a) /* OPCODE: 0x67 */
+op_ld_r_r(l, b) /* OPCODE: 0x68 */
+op_ld_r_r(l, c) /* OPCODE: 0x69 */
+op_ld_r_r(l, d) /* OPCODE: 0x6A */
+op_ld_r_r(l, e) /* OPCODE: 0x6B */
+op_ld_r_r(l, h) /* OPCODE: 0x6C */
+op_ld_r_r(l, l) /* OPCODE: 0x6D */
+op_ld_r_r(l, a) /* OPCODE: 0x6F */
+/* 0x7- OPCODES */
+op_ld_r_r(a, b) /* OPCODE: 0x78 */
+op_ld_r_r(a, c) /* OPCODE: 0x79 */
+op_ld_r_r(a, d) /* OPCODE: 0x7A */
+op_ld_r_r(a, e) /* OPCODE: 0x7B */
+op_ld_r_r(a, h) /* OPCODE: 0x7C */
+op_ld_r_r(a, l) /* OPCODE: 0x7D */
+op_ld_r_r(a, a) /* OPCODE: 0x7F */
+#undef op_ld_r_r
+
+/**
+ * Define a function for moving value from the address in HL to REG.
+ * op_ld_r_hl  [1  |  8] [- - - -]
+ */
+#define op_ld_r_hl(REG)                         \
+PRE_OP_FUNC ld_##REG##_hl(LR35920_CPU *c) {     \
+    /* @TODO CLOCK HANDLING */                  \
+    /* c->r.REG = c->mem_read(GET_REG16((c->r.h, c->r.l)) */  \
+}
+op_ld_r_hl(b)   /* OPCODE: 0x46 */
+op_ld_r_hl(c)   /* OPCODE: 0x4E */
+op_ld_r_hl(d)   /* OPCODE: 0x56 */
+op_ld_r_hl(e)   /* OPCODE: 0x5E */
+op_ld_r_hl(h)   /* OPCODE: 0x66 */
+op_ld_r_hl(l)   /* OPCODE: 0x6E */
+op_ld_r_hl(a)   /* OPCODE: 0x7E */
+#undef op_ld_r_hl
+
+/**
+ * Define a function for moving value from REG into the address in HL.
+ * op_ld_hl_r  [1  |  8] [- - - -]
+ */
+#define op_ld_hl_r(REG)                         \
+PRE_OP_FUNC ld_hl_##REG(LR35920_CPU *c) {       \
+    /* @TODO CLOCK HANDLING */                  \
+    /* c->mem_write(GET_REG16((c->r.h, c->r.l), c->r.REG)) */  \
+}
+op_ld_hl_r(b)   /* OPCODE: 0x70 */
+op_ld_hl_r(c)   /* OPCODE: 0x71 */
+op_ld_hl_r(d)   /* OPCODE: 0x72 */
+op_ld_hl_r(e)   /* OPCODE: 0x73 */
+op_ld_hl_r(h)   /* OPCODE: 0x74 */
+op_ld_hl_r(l)   /* OPCODE: 0x75 */
+op_ld_hl_r(a)   /* OPCODE: 0x77 */
+#undef op_ld_hl_r
+
+/*********************************************************************************************************************\
+| 8 Bit Arithmetic Commands                                                                                           |
+\*********************************************************************************************************************/
+
+/**
+ * Define a function for decrementing a register.
+ * op_ld_hl_r  [1  |  4] [Z 0 H -]
+ */
+#define op_inc_r(REG)                       \
+PRE_OP_FUNC inc_##REG(LR35920_CPU *c) {     \
+    /* @TODO CLOCK HANDLING */              \
+    /* @TODO */  \
+}
+op_inc_r(b)     /* OPCODE: 0x04 */
+op_inc_r(c)     /* OPCODE: 0x0C */
+op_inc_r(d)     /* OPCODE: 0x14 */
+op_inc_r(e)     /* OPCODE: 0x1C */
+op_inc_r(h)     /* OPCODE: 0x24 */
+op_inc_r(l)     /* OPCODE: 0x2C */
+op_inc_r(a)     /* OPCODE: 0x3C */
+#undef op_inc_r
+/* @TODO HL*/
+
+/**
+ * Define a function for decrementing a register.
+ * op_ld_hl_r  [1  |  4] [Z 1 H -]
+ */
+#define op_dec_r(REG)                       \
+PRE_OP_FUNC dec_##REG(LR35920_CPU *c) {     \
+    /* @TODO CLOCK HANDLING */              \
+    /* @TODO */  \
+}
+op_dec_r(b)     /* OPCODE: 0x05 */
+op_dec_r(c)     /* OPCODE: 0x0D */
+op_dec_r(d)     /* OPCODE: 0x15 */
+op_dec_r(e)     /* OPCODE: 0x1D */
+op_dec_r(h)     /* OPCODE: 0x25 */
+op_dec_r(l)     /* OPCODE: 0x2D */
+op_dec_r(a)     /* OPCODE: 0x3D */
+#undef op_dec_r
+/* @TODO HL*/
+
+/**
+ * Define a function for adding a register to a.
+ * op_ld_hl_r  [1  |  4] [Z 0 H C]
+ */
+#define op_add_a_r(REG)                     \
+PRE_OP_FUNC add_a_##REG(LR35920_CPU *c) {   \
+    /* @TODO CLOCK HANDLING */              \
+    /* @TODO */  \
+}
+op_add_a_r(b)     /* OPCODE: 0x80 */
+op_add_a_r(c)     /* OPCODE: 0x81 */
+op_add_a_r(d)     /* OPCODE: 0x82 */
+op_add_a_r(e)     /* OPCODE: 0x83 */
+op_add_a_r(h)     /* OPCODE: 0x84 */
+op_add_a_r(l)     /* OPCODE: 0x85 */
+op_add_a_r(a)     /* OPCODE: 0x87 */
+#undef op_add_a_r
+/* @TODO HL*/
+
+/**
+ * Define a function for adding a register value with carry flag to A.
+ * op_ld_hl_r  [1  |  4] [Z 0 H C]
+ */
+#define op_adc_a_r(REG)                     \
+PRE_OP_FUNC adc_a_##REG(LR35920_CPU *c) {   \
+    /* @TODO CLOCK HANDLING */              \
+    /* @TODO */  \
+}
+op_adc_a_r(b)     /* OPCODE: 0x88 */
+op_adc_a_r(c)     /* OPCODE: 0x89 */
+op_adc_a_r(d)     /* OPCODE: 0x8A */
+op_adc_a_r(e)     /* OPCODE: 0x8B */
+op_adc_a_r(h)     /* OPCODE: 0x8C */
+op_adc_a_r(l)     /* OPCODE: 0x8D */
+op_adc_a_r(a)     /* OPCODE: 0x8F */
+#undef op_adc_a_r
+/* @TODO HL*/
+
+/**
+ * Define a function for adding a register to a.
+ * op_ld_hl_r  [1  |  4] [Z 0 H C]
+ */
+#define op_sub_r(REG)                       \
+PRE_OP_FUNC sub_##REG(LR35920_CPU *c) {     \
+    /* @TODO CLOCK HANDLING */              \
+    /* @TODO */  \
+}
+op_sub_r(b)     /* OPCODE: 0x90 */
+op_sub_r(c)     /* OPCODE: 0x91 */
+op_sub_r(d)     /* OPCODE: 0x92 */
+op_sub_r(e)     /* OPCODE: 0x93 */
+op_sub_r(h)     /* OPCODE: 0x94 */
+op_sub_r(l)     /* OPCODE: 0x95 */
+op_sub_r(a)     /* OPCODE: 0x97 */
+#undef op_sub_r
+/* @TODO HL*/
+
+/**
+ * Define a function for adding a register to a.
+ * op_sbc_r  [1  |  4] [Z 0 H C]
+ */
+#define op_sbc_r(REG)                       \
+PRE_OP_FUNC sbc_##REG(LR35920_CPU *c) {     \
+    /* @TODO CLOCK HANDLING */              \
+    /* @TODO */  \
+}
+op_sbc_r(b)     /* OPCODE: 0x98 */
+op_sbc_r(c)     /* OPCODE: 0x99 */
+op_sbc_r(d)     /* OPCODE: 0x9A */
+op_sbc_r(e)     /* OPCODE: 0x9B */
+op_sbc_r(h)     /* OPCODE: 0x9C */
+op_sbc_r(l)     /* OPCODE: 0x9D */
+op_sbc_r(a)     /* OPCODE: 0x9F */
+#undef op_sbc_r
+/* @TODO HL*/
+
+
+
+/*********************************************************************************************************************\
+| 16 Bit Load Commands                                                                                                |
+\*********************************************************************************************************************/
+
+/**
+ * Define a function for putting an immediate 16 bit value from the stack into 2 8 bit registers.
+ * op_ld_rr_nn  [1  |  8] [- - - -]
+ */
+#define op_ld_rr_nn(REGH, REGL)                     \
+PRE_OP_FUNC ld_##REGH##REGL##_nn(LR35920_CPU *c) {  \
+    /* @TODO CLOCK HANDLING */                      \
+    /* c->r.REGL = c->mem_read((c->r.pc)++) */      \
+    /* c->r.REGH = c->mem_read((c->r.pc)++) */      \
+}
+op_ld_rr_nn(b,c)   /* OPCODE: 0x01 */
+op_ld_rr_nn(d,e)   /* OPCODE: 0x11 */
+op_ld_rr_nn(h,l)   /* OPCODE: 0x21 */
+#undef op_ld_rr_nn
+/* @TODO SP */
+
+/*********************************************************************************************************************\
+| 16 Bit Arithmetic Commands                                                                                          |
+\*********************************************************************************************************************/
+
+/**
+ * Define a function for decrementing a 16 bit register composed of 2 8 bit registers.
+ * op_ld_hl_r  [1  |  8] [- - - -]
+ */
+#define op_inc_rr(REGH, REGL)                   \
+PRE_OP_FUNC inc_##REGH##REGL(LR35920_CPU *c) {  \
+    /* @TODO CLOCK HANDLING */                  \
+    /* @TODO */  \
+}
+op_inc_rr(b,c)     /* OPCODE: 0x03 */
+op_inc_rr(d,e)     /* OPCODE: 0x13 */
+op_inc_rr(h,l)     /* OPCODE: 0x23 */
+#undef op_inc_rr
+/* @TODO SP */
+
+/**
+ * Define a function for incrementing a 16 bit register composed of 2 8 bit registers.
+ * op_ld_hl_r  [1  |  8] [- - - -]
+ */
+#define op_dec_rr(REGH, REGL)                   \
+PRE_OP_FUNC dec_##REGH##REGL(LR35920_CPU *c) {  \
+    /* @TODO CLOCK HANDLING */                  \
+    /* @TODO */  \
+}
+op_dec_rr(b,c)     /* OPCODE: 0x0B */
+op_dec_rr(d,e)     /* OPCODE: 0x1B */
+op_dec_rr(h,l)     /* OPCODE: 0x2B */
+#undef op_dec_rr
+/* @TODO SP */
+
+#undef PRE_OP_FUNC
 
 LR35902_OP_FN op[256] = {
 /*          0x-0        0x-1        0x-2        0x-3        0x-4        0x-5        0x-6        0x-7        0x-8        0x-9        0x-A        0x-B        0x-C        0x-D        0x-E        0x-F */
-/*0x0-*/    nop,        ld_bc_d16,  ld_bc_a,    inc_bc,     inc_b,      dec_b,      ld_e_d8,    rlca,       ld_a16_sp,  add_hl_bc,  ld_a_bc,    dec_bc,     inc_c,      dec_c,      ld_c_d8,    rrca,
-/*0x1-*/    stop,       ld_de_d16,  ld_de_a,    inc_de,     inc_d,      dec_d,      ld_d_d8,    rla,        jr,         add_hl_de,  ld_a_de,    dec_de,     inc_e,      dec_e,      ld_e_d8,    rra,
-/*0x2-*/    jr_nz,      ld_hl_d16,  ldi_hl_a,   inc_hl,     inc_h,      dec_h,      ld_h_d8,    daa,        jr_z,       add_hl_hl,  ldi_a_hl,   dec_hl,     inc_l,      dec_l,      ld_l_d8,    cpl,
-/*0x3-*/    jr_nc,      ld_sp_d16,  ldd_hl_a,   inc_sp,     inc_hl,     dec_hl,     ld_hl_d8,   scf,        jr_c,       add_hl_sp,  ldd_a_hl,   dec_sp,     inc_a,      dec_a,      ld_a_d8,    ccf,
+/*0x0-*/    nop,        ld_bc_nn,   ld_bc_a,    inc_bc,     inc_b,      dec_b,      ld_b_n,     rlca,       ld_nn_sp,   add_hl_bc,  ld_a_bc,    dec_bc,     inc_c,      dec_c,      ld_c_n,     rrca,
+/*0x1-*/    stop,       ld_de_nn,   ld_de_a,    inc_de,     inc_d,      dec_d,      ld_d_n,     rla,        jr,         add_hl_de,  ld_a_de,    dec_de,     inc_e,      dec_e,      ld_e_n,     rra,
+/*0x2-*/    jr_nz,      ld_hl_nn,   ldi_hl_a,   inc_hl,     inc_h,      dec_h,      ld_h_n,     daa,        jr_z,       add_hl_hl,  ldi_a_hl,   dec_hl,     inc_l,      dec_l,      ld_l_n,     cpl,
+/*0x3-*/    jr_nc,      ld_sp_nn,   ldd_hl_a,   inc_sp,     inc_hl,     dec_hl,     ld_hl_n,    scf,        jr_c,       add_hl_sp,  ldd_a_hl,   dec_sp,     inc_a,      dec_a,      ld_a_n,     ccf,
 /*0x4-*/    ld_b_b,     ld_b_c,     ld_b_d,     ld_b_e,     ld_b_h,     ld_b_l,     ld_b_hl,    ld_b_a,     ld_c_b,     ld_c_c,     ld_c_d,     ld_c_e,     ld_c_h,     ld_c_l,     ld_c_hl,    ld_c_a,
 /*0x5-*/    ld_d_b,     ld_d_c,     ld_d_d,     ld_d_e,     ld_d_h,     ld_d_l,     ld_d_hl,    ld_d_a,     ld_e_b,     ld_e_c,     ld_e_d,     ld_e_e,     ld_e_h,     ld_e_l,     ld_e_hl,    ld_e_a,
 /*0x6-*/    ld_h_b,     ld_h_c,     ld_h_d,     ld_h_e,     ld_h_h,     ld_h_l,     ld_h_hl,    ld_h_a,     ld_l_b,     ld_l_c,     ld_l_d,     ld_l_e,     ld_l_h,     ld_l_l,     ld_l_hl,    ld_l_a,
-/*0x7-*/    ld_hl_b,    ld_hl_c,    ld_hl_d,    ld_hl_e,    ld_hl_h,    ld_hl_l,    halt,       ld_hl_a,    ld_a_b,     ld_a_c,     ld_a_d,     ld_a_e,     ld_a_h,     ld_a_l,     ld_a_hl,    ld_a_a
+/*0x7-*/    ld_hl_b,    ld_hl_c,    ld_hl_d,    ld_hl_e,    ld_hl_h,    ld_hl_l,    halt,       ld_hl_a,    ld_a_b,     ld_a_c,     ld_a_d,     ld_a_e,     ld_a_h,     ld_a_l,     ld_a_hl,    ld_a_a,
 /*0x8-*/    add_a_b,    add_a_c,    add_a_d,    add_a_e,    add_a_h,    add_a_l,    add_a_hl,   add_a_a,    adc_a_b,    adc_a_c,    adc_a_d,    adc_a_e,    adc_a_h,    adc_a_l,    adc_a_hl,   adc_a_a,
 /*0x9-*/    sub_b,      sub_c,      sub_d,      sub_e,      sub_h,      sub_l,      sub_hl,     sub_a,      sbc_b,      sbc_c,      sbc_d,      sbc_e,      sbc_h,      sbc_l,      sbc_hl,     sbc_a,
 /*0xA-*/    and_b,      and_c,      and_d,      and_e,      and_h,      and_l,      and_hl,     and_a,      xor_b,      xor_c,      xor_d,      xor_e,      xor_h,      xor_l,      xor_hl,     xor_a,
@@ -63,7 +389,7 @@ LR35902_OP_FN opCB[256] = {
 /*0x0-*/    rlc_b,      rlc_c,      rlc_d,      rlc_e,      rlc_h,      rlc_l,      rlc_hl,     rlc_a,      rrc_b,      rrc_c,      rrc_d,      rrc_e,      rrc_h,      rrc_l,      rrc_hl,     rrc_a,
 /*0x1-*/    rl_b,       rl_c,       rl_d,       rl_e,       rl_h,       rl_l,       rl_hl,      rl_a,       rr_b,       rr_c,       rr_d,       rr_e,       rr_l,       rr_l,       rr_hl,      rr_a,
 /*0x2-*/    sla_b,      sla_c,      sla_d,      sla_e,      sla_h,      sla_l,      sla_hl,     sla_a,      sra_b,      sra_c,      sra_d,      sra_e,      sra_h,      sra_l,      sra_hl,     sra_a,
-/*0x3-*/    swap_b,     swap_c,     swap_d,     swap_e,     swap_h,     swap_l,     swap_hl,    swap_a,     srl_b,      srl_c,      srl_d,      srl_e,      srl_h,      srl_l,      srl_hl,     srl_a,
+/*0x3-*/    swap_b,     swap_c,     swap_d,     swap_e,     swap_h,     swap_l,     swap_hl,    swap_a,     srl_b,      srl_c,      srl_d,      srl_e,      srl_h,      srl_l,      srl_hl,     srl_c,
 /*0x4-*/    bit_0_b,    bit_0_c,    bit_0_d,    bit_0_e,    bit_0_h,    bit_0_l,    bit_0_hl,   bit_0_a,    bit_1_b,    bit_1_c,    bit_1_d,    bit_1_e,    bit_1_h,    bit_1_l,    bit_1_hl,   bit_1_a,
 /*0x5-*/    bit_2_b,    bit_2_c,    bit_2_d,    bit_2_e,    bit_2_h,    bit_2_l,    bit_2_hl,   bit_2_a,    bit_3_b,    bit_3_c,    bit_3_d,    bit_3_e,    bit_3_h,    bit_3_l,    bit_3_hl,   bit_3_a,
 /*0x6-*/    bit_4_b,    bit_4_c,    bit_4_d,    bit_4_e,    bit_4_h,    bit_4_l,    bit_4_hl,   bit_4_a,    bit_5_b,    bit_5_c,    bit_5_d,    bit_5_e,    bit_5_h,    bit_5_l,    bit_5_hl,   bit_5_a,
@@ -87,4 +413,3 @@ void exec_op(void)
     op[opcode]();
 }
 
-#undef DEF_OP

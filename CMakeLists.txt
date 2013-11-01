@@ -12,6 +12,7 @@ INCLUDE_DIRECTORIES(
 SET(include
     xplat/SiNES_types.h
     xplat/platform.h
+    processors/Nintendo/LR35902/cpu.h
     processors/Nintendo/LR35902/ops.h
     processors/Nintendo/LR35902/registers.h
 )
