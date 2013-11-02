@@ -44,6 +44,95 @@ PRE_OP_FUNC nop(LR35920_CPU *c) {
 }
 
 /*********************************************************************************************************************\
+| Jump, Return, Call, Reset Commands                                                                                  |
+\*********************************************************************************************************************/
+
+// 0x20     jr_nz       [2  |12/8] [- - - -]
+PRE_OP_FUNC jr_nz(LR35920_CPU *c) {
+    /* @TODO CLOCK HANDLING */
+    /* @TODO */
+}
+
+// 0x30     jr_nc       [2  |12/8] [- - - -]
+PRE_OP_FUNC jr_nc(LR35920_CPU *c) {
+    /* @TODO CLOCK HANDLING */
+    /* @TODO */
+}
+
+// 0x18     jr          [2  | 12] [- - - -]
+PRE_OP_FUNC jr(LR35920_CPU *c) {
+    /* @TODO CLOCK HANDLING */
+    /* @TODO */
+}
+
+// 0x28     jr_z        [2  |12/8] [- - - -]
+PRE_OP_FUNC jr_z(LR35920_CPU *c) {
+    /* @TODO CLOCK HANDLING */
+    /* @TODO */
+}
+
+// 0x38     jr_c        [2  |12/8] [- - - -]
+PRE_OP_FUNC jr_c(LR35920_CPU *c) {
+    /* @TODO CLOCK HANDLING */
+    /* @TODO */
+}
+
+// 0xC0     ret_nz      [1  |20/8] [- - - -]
+PRE_OP_FUNC ret_nz(LR35920_CPU *c) {
+    /* @TODO CLOCK HANDLING */
+    /* @TODO */
+}
+
+// 0xD0     ret_nc      [1  |20/8] [- - - -]
+PRE_OP_FUNC ret_nc(LR35920_CPU *c) {
+    /* @TODO CLOCK HANDLING */
+    /* @TODO */
+}
+
+// 0xC2     jp_nz      [3  |16/12] [- - - -]
+PRE_OP_FUNC jp_nz(LR35920_CPU *c) {
+    /* @TODO CLOCK HANDLING */
+    /* @TODO */
+}
+
+// 0xD2     jp_nc      [3  |16/12] [- - - -]
+PRE_OP_FUNC jp_nc(LR35920_CPU *c) {
+    /* @TODO CLOCK HANDLING */
+    /* @TODO */
+}
+
+// 0xC3     call_nz    [3  |24/12] [- - - -]
+PRE_OP_FUNC call_nz(LR35920_CPU *c) {
+    /* @TODO CLOCK HANDLING */
+    /* @TODO */
+}
+
+// 0xD3     call_nc    [3  |24/12] [- - - -]
+PRE_OP_FUNC call_nc(LR35920_CPU *c) {
+    /* @TODO CLOCK HANDLING */
+    /* @TODO */
+}
+
+/**
+ * Define a function for pushing present address onto stack and jumping to offset
+ * op_rst_nnh    [2  | 16] [- - - -]
+ */
+#define op_rst_nnh(OFFSET)                      \
+PRE_OP_FUNC rst_##OFFSET##h(LR35920_CPU *c) {   \
+    /* @TODO CLOCK HANDLING */                  \
+    /*  */                                      \
+}
+op_rst_nnh(00)      /* OPCODE: 0xC7 */
+op_rst_nnh(08)      /* OPCODE: 0xCF */
+op_rst_nnh(10)      /* OPCODE: 0xD7 */
+op_rst_nnh(18)      /* OPCODE: 0xCF */
+op_rst_nnh(20)      /* OPCODE: 0xE7 */
+op_rst_nnh(28)      /* OPCODE: 0xEF */
+op_rst_nnh(30)      /* OPCODE: 0xF7 */
+op_rst_nnh(38)      /* OPCODE: 0xFF */
+#undef op_rst_nnh
+
+/*********************************************************************************************************************\
 | 8 Bit Load Commands                                                                                                 |
 \*********************************************************************************************************************/
 
@@ -247,7 +336,7 @@ op_add_a_r(h)     /* OPCODE: 0x84 */
 op_add_a_r(l)     /* OPCODE: 0x85 */
 op_add_a_r(a)     /* OPCODE: 0x87 */
 #undef op_add_a_r
-/* @TODO HL*/
+/* @TODO HL & n*/
 
 /**
  * Define a function for adding a register value with carry flag to A.
@@ -266,7 +355,7 @@ op_adc_a_r(h)     /* OPCODE: 0x8C */
 op_adc_a_r(l)     /* OPCODE: 0x8D */
 op_adc_a_r(a)     /* OPCODE: 0x8F */
 #undef op_adc_a_r
-/* @TODO HL*/
+/* @TODO HL & n*/
 
 /**
  * Define a function for adding a register to a.
@@ -285,10 +374,10 @@ op_sub_r(h)     /* OPCODE: 0x94 */
 op_sub_r(l)     /* OPCODE: 0x95 */
 op_sub_r(a)     /* OPCODE: 0x97 */
 #undef op_sub_r
-/* @TODO HL*/
+/* @TODO HL & n*/
 
 /**
- * Define a function for adding a register to a.
+ * Define a function for subtracting with carry from register to a.
  * op_sbc_r  [1  |  4] [Z 0 H C]
  */
 #define op_sbc_r(REG)                       \
@@ -304,9 +393,83 @@ op_sbc_r(h)     /* OPCODE: 0x9C */
 op_sbc_r(l)     /* OPCODE: 0x9D */
 op_sbc_r(a)     /* OPCODE: 0x9F */
 #undef op_sbc_r
-/* @TODO HL*/
+/* @TODO HL & n*/
 
+/**
+ * Define a function for and'ing a register to a.
+ * op_ld_hl_r  [1  |  4] [Z 0 1 0]
+ */
+#define op_and_r(REG)                       \
+PRE_OP_FUNC and_##REG(LR35920_CPU *c) {     \
+    /* @TODO CLOCK HANDLING */              \
+    /* @TODO */  \
+}
+op_and_r(b)     /* OPCODE: 0xA0 */
+op_and_r(c)     /* OPCODE: 0xA1 */
+op_and_r(d)     /* OPCODE: 0xA2 */
+op_and_r(e)     /* OPCODE: 0xA3 */
+op_and_r(h)     /* OPCODE: 0xA4 */
+op_and_r(l)     /* OPCODE: 0xA5 */
+op_and_r(a)     /* OPCODE: 0xA7 */
+#undef op_and_r
+/* @TODO HL & n*/
 
+/**
+ * Define a function for adding a register to a.
+ * op_and_r  [1  |  4] [Z 0 0 0]
+ */
+#define op_xor_r(REG)                       \
+PRE_OP_FUNC xor_##REG(LR35920_CPU *c) {     \
+    /* @TODO CLOCK HANDLING */              \
+    /* @TODO */  \
+}
+op_xor_r(b)     /* OPCODE: 0xA8 */
+op_xor_r(c)     /* OPCODE: 0xA9 */
+op_xor_r(d)     /* OPCODE: 0xAA */
+op_xor_r(e)     /* OPCODE: 0xAB */
+op_xor_r(h)     /* OPCODE: 0xAC */
+op_xor_r(l)     /* OPCODE: 0xAD */
+op_xor_r(a)     /* OPCODE: 0xAF */
+#undef op_xor_r
+/* @TODO HL & n*/
+
+/**
+ * Define a function for or'ing a register to a.
+ * op_ld_hl_r  [1  |  4] [Z 0 0 0]
+ */
+#define op_or_r(REG)                        \
+PRE_OP_FUNC or_##REG(LR35920_CPU *c) {      \
+    /* @TODO CLOCK HANDLING */              \
+    /* @TODO */  \
+}
+op_or_r(b)      /* OPCODE: 0xB0 */
+op_or_r(c)      /* OPCODE: 0xB1 */
+op_or_r(d)      /* OPCODE: 0xB2 */
+op_or_r(e)      /* OPCODE: 0xB3 */
+op_or_r(h)      /* OPCODE: 0xB4 */
+op_or_r(l)      /* OPCODE: 0xB5 */
+op_or_r(a)      /* OPCODE: 0xB7 */
+#undef op_or_r
+/* @TODO HL & n*/
+
+/**
+ * Define a function for adding a register to a.
+ * op_and_r  [1  |  4] [Z 1 H C]
+ */
+#define op_cp_r(REG)                        \
+PRE_OP_FUNC cp_##REG(LR35920_CPU *c) {      \
+    /* @TODO CLOCK HANDLING */              \
+    /* @TODO */  \
+}
+op_cp_r(b)      /* OPCODE: 0xB8 */
+op_cp_r(c)      /* OPCODE: 0xB9 */
+op_cp_r(d)      /* OPCODE: 0xBA */
+op_cp_r(e)      /* OPCODE: 0xBB */
+op_cp_r(h)      /* OPCODE: 0xBC */
+op_cp_r(l)      /* OPCODE: 0xBD */
+op_cp_r(a)      /* OPCODE: 0xBF */
+#undef op_cp_r
+/* @TODO HL & n*/
 
 /*********************************************************************************************************************\
 | 16 Bit Load Commands                                                                                                |
@@ -341,9 +504,9 @@ PRE_OP_FUNC inc_##REGH##REGL(LR35920_CPU *c) {  \
     /* @TODO CLOCK HANDLING */                  \
     /* @TODO */  \
 }
-op_inc_rr(b,c)     /* OPCODE: 0x03 */
-op_inc_rr(d,e)     /* OPCODE: 0x13 */
-op_inc_rr(h,l)     /* OPCODE: 0x23 */
+op_inc_rr(b,c)      /* OPCODE: 0x03 */
+op_inc_rr(d,e)      /* OPCODE: 0x13 */
+op_inc_rr(h,l)      /* OPCODE: 0x23 */
 #undef op_inc_rr
 /* @TODO SP */
 
@@ -356,11 +519,394 @@ PRE_OP_FUNC dec_##REGH##REGL(LR35920_CPU *c) {  \
     /* @TODO CLOCK HANDLING */                  \
     /* @TODO */  \
 }
-op_dec_rr(b,c)     /* OPCODE: 0x0B */
-op_dec_rr(d,e)     /* OPCODE: 0x1B */
-op_dec_rr(h,l)     /* OPCODE: 0x2B */
+op_dec_rr(b,c)      /* OPCODE: 0x0B */
+op_dec_rr(d,e)      /* OPCODE: 0x1B */
+op_dec_rr(h,l)      /* OPCODE: 0x2B */
 #undef op_dec_rr
 /* @TODO SP */
+
+/*********************************************************************************************************************\
+| CBX Commands                                                                                                        |
+\*********************************************************************************************************************/
+
+/**
+ * Define a function for rotating left bit 7 to carry.
+ * op_rlc_r     [2  |  8] [Z 0 0 C]
+ */
+#define op_rlc_r(REG)                           \
+PRE_OP_FUNC rlc_##REG(LR35920_CPU *c) {         \
+    /* @TODO Clock Handling */                  \
+    /* @TODO */                                 \
+}
+op_rlc_r(b);        /* CB OPCODE: 0x00 */
+op_rlc_r(c);        /* CB OPCODE: 0x01 */
+op_rlc_r(d);        /* CB OPCODE: 0x02 */
+op_rlc_r(e);        /* CB OPCODE: 0x03 */
+op_rlc_r(h);        /* CB OPCODE: 0x04 */
+op_rlc_r(l);        /* CB OPCODE: 0x05 */
+op_rlc_r(a);        /* CB OPCODE: 0x07 */
+#undef op_rlc_r
+
+/* @TODO rlc HL*/
+
+/**
+ * Define a function for rotating right bit 7 to carry.
+ * op_rrc_r     [2  |  8] [Z 0 0 C]
+ */
+#define op_rrc_r(REG)                           \
+PRE_OP_FUNC rrc_##REG(LR35920_CPU *c) {         \
+    /* @TODO Clock Handling */                  \
+    /* @TODO */                                 \
+}
+op_rrc_r(b);        /* CB OPCODE: 0x08 */
+op_rrc_r(c);        /* CB OPCODE: 0x09 */
+op_rrc_r(d);        /* CB OPCODE: 0x0A */
+op_rrc_r(e);        /* CB OPCODE: 0x0B */
+op_rrc_r(h);        /* CB OPCODE: 0x0C */
+op_rrc_r(l);        /* CB OPCODE: 0x0D */
+op_rrc_r(a);        /* CB OPCODE: 0x0F */
+#undef op_rrc_r
+
+/* @TODO rlc HL*/
+
+/**
+ * Define a function for rotating left through carry.
+ * op_rl_r      [2  |  8] [Z 0 0 C]
+ */
+#define op_rl_r(REG)                            \
+PRE_OP_FUNC rl_##REG(LR35920_CPU *c) {          \
+    /* @TODO Clock Handling */                  \
+    /* @TODO */                                 \
+}
+op_rl_r(b);         /* CB OPCODE: 0x10 */
+op_rl_r(c);         /* CB OPCODE: 0x11 */
+op_rl_r(d);         /* CB OPCODE: 0x12 */
+op_rl_r(e);         /* CB OPCODE: 0x13 */
+op_rl_r(h);         /* CB OPCODE: 0x14 */
+op_rl_r(l);         /* CB OPCODE: 0x15 */
+op_rl_r(a);         /* CB OPCODE: 0x17 */
+#undef op_rl_r
+
+/* @TODO rlc HL*/
+
+/**
+ * Define a function for rotating right through carry.
+ * op_rr_r      [2  |  8] [Z 0 0 C]
+ */
+#define op_rr_r(REG)                            \
+PRE_OP_FUNC rr_##REG(LR35920_CPU *c) {          \
+    /* @TODO Clock Handling */                  \
+    /* @TODO */                                 \
+}
+op_rr_r(b);         /* CB OPCODE: 0x18 */
+op_rr_r(c);         /* CB OPCODE: 0x19 */
+op_rr_r(d);         /* CB OPCODE: 0x1A */
+op_rr_r(e);         /* CB OPCODE: 0x1B */
+op_rr_r(h);         /* CB OPCODE: 0x1C */
+op_rr_r(l);         /* CB OPCODE: 0x1D */
+op_rr_r(a);         /* CB OPCODE: 0x1F */
+#undef op_rr_r
+
+/* @TODO rlc HL*/
+
+/**
+ * Define a function for shifting left into carry.
+ * op_rlc_r     [2  |  8] [Z 0 0 C]
+ */
+#define op_sla_r(REG)                           \
+PRE_OP_FUNC sla_##REG(LR35920_CPU *c) {         \
+    /* @TODO Clock Handling */                  \
+    /* @TODO */                                 \
+}
+op_sla_r(b);        /* CB OPCODE: 0x20 */
+op_sla_r(c);        /* CB OPCODE: 0x21 */
+op_sla_r(d);        /* CB OPCODE: 0x22 */
+op_sla_r(e);        /* CB OPCODE: 0x23 */
+op_sla_r(h);        /* CB OPCODE: 0x24 */
+op_sla_r(l);        /* CB OPCODE: 0x25 */
+op_sla_r(a);        /* CB OPCODE: 0x27 */
+#undef op_sla_r
+
+/* @TODO rlc HL*/
+
+/**
+ * Define a function for shifting right from carry.
+ * op_sra_r     [2  |  8] [Z 0 0 C]
+ */
+#define op_sra_r(REG)                           \
+PRE_OP_FUNC sra_##REG(LR35920_CPU *c) {         \
+    /* @TODO Clock Handling */                  \
+    /* @TODO */                                 \
+}
+op_sra_r(b);        /* CB OPCODE: 0x28 */
+op_sra_r(c);        /* CB OPCODE: 0x29 */
+op_sra_r(d);        /* CB OPCODE: 0x2A */
+op_sra_r(e);        /* CB OPCODE: 0x2B */
+op_sra_r(h);        /* CB OPCODE: 0x2C */
+op_sra_r(l);        /* CB OPCODE: 0x2D */
+op_sra_r(a);        /* CB OPCODE: 0x2F */
+#undef op_sra_r
+
+/* @TODO rlc HL*/
+
+/**
+ * Define a function for @TODO.
+ * op_swap_r     [2  |  8] [Z 0 0 0]
+ */
+#define op_swap_r(REG)                          \
+PRE_OP_FUNC swap_##REG(LR35920_CPU *c) {        \
+    /* @TODO Clock Handling */                  \
+    /* @TODO */                                 \
+}
+op_swap_r(b);       /* CB OPCODE: 0x30 */
+op_swap_r(c);       /* CB OPCODE: 0x31 */
+op_swap_r(d);       /* CB OPCODE: 0x32 */
+op_swap_r(e);       /* CB OPCODE: 0x33 */
+op_swap_r(h);       /* CB OPCODE: 0x34 */
+op_swap_r(l);       /* CB OPCODE: 0x35 */
+op_swap_r(a);       /* CB OPCODE: 0x37 */
+#undef op_swap_r
+
+/* @TODO swap HL*/
+
+/**
+ * Define a function for shifting right into carry MSB 0.
+ * op_srl_r     [2  |  8] [Z 0 0 C]
+ */
+#define op_srl_r(REG)                           \
+PRE_OP_FUNC srl_##REG(LR35920_CPU *c) {         \
+    /* @TODO Clock Handling */                  \
+    /* @TODO */                                 \
+}
+op_srl_r(b);        /* CB OPCODE: 0x38 */
+op_srl_r(c);        /* CB OPCODE: 0x39 */
+op_srl_r(d);        /* CB OPCODE: 0x3A */
+op_srl_r(e);        /* CB OPCODE: 0x3B */
+op_srl_r(h);        /* CB OPCODE: 0x3C */
+op_srl_r(l);        /* CB OPCODE: 0x3D */
+op_srl_r(a);        /* CB OPCODE: 0x3F */
+#undef op_srl_r
+
+/* @TODO srl hl */
+
+/**
+ * Define a function for shift right .
+ * op_ld_hl_r  [2  |  8] [Z 0 1 -]
+ */
+#define op_bit_n_r(BIT, REG)                    \
+PRE_OP_FUNC bit_##BIT##_##REG(LR35920_CPU *c) { \
+    /* @TODO Clock Handling */                  \
+    /* @TODO */                                 \
+}
+/* 0x4- CB OPCODES */
+op_bit_n_r(0,b)     /* CB OPCODE: 0x40 */
+op_bit_n_r(0,c)     /* CB OPCODE: 0x41 */
+op_bit_n_r(0,d)     /* CB OPCODE: 0x42 */
+op_bit_n_r(0,e)     /* CB OPCODE: 0x43 */
+op_bit_n_r(0,h)     /* CB OPCODE: 0x44 */
+op_bit_n_r(0,l)     /* CB OPCODE: 0x45 */
+op_bit_n_r(0,a)     /* CB OPCODE: 0x47 */
+op_bit_n_r(1,b)     /* CB OPCODE: 0x48 */
+op_bit_n_r(1,c)     /* CB OPCODE: 0x49 */
+op_bit_n_r(1,d)     /* CB OPCODE: 0x4A */
+op_bit_n_r(1,e)     /* CB OPCODE: 0x4B */
+op_bit_n_r(1,h)     /* CB OPCODE: 0x4C */
+op_bit_n_r(1,l)     /* CB OPCODE: 0x4D */
+op_bit_n_r(1,a)     /* CB OPCODE: 0x4F */
+/* 0x5- CB OPCODES */
+op_bit_n_r(2,b)     /* CB OPCODE: 0x50 */
+op_bit_n_r(2,c)     /* CB OPCODE: 0x51 */
+op_bit_n_r(2,d)     /* CB OPCODE: 0x52 */
+op_bit_n_r(2,e)     /* CB OPCODE: 0x53 */
+op_bit_n_r(2,h)     /* CB OPCODE: 0x54 */
+op_bit_n_r(2,l)     /* CB OPCODE: 0x55 */
+op_bit_n_r(2,a)     /* CB OPCODE: 0x57 */
+op_bit_n_r(3,b)     /* CB OPCODE: 0x58 */
+op_bit_n_r(3,c)     /* CB OPCODE: 0x59 */
+op_bit_n_r(3,d)     /* CB OPCODE: 0x5A */
+op_bit_n_r(3,e)     /* CB OPCODE: 0x5B */
+op_bit_n_r(3,h)     /* CB OPCODE: 0x5C */
+op_bit_n_r(3,l)     /* CB OPCODE: 0x5D */
+op_bit_n_r(3,a)     /* CB OPCODE: 0x5F */
+/* 0x6- CB OPCODES */
+op_bit_n_r(4,b)     /* CB OPCODE: 0x60 */
+op_bit_n_r(4,c)     /* CB OPCODE: 0x61 */
+op_bit_n_r(4,d)     /* CB OPCODE: 0x62 */
+op_bit_n_r(4,e)     /* CB OPCODE: 0x63 */
+op_bit_n_r(4,h)     /* CB OPCODE: 0x64 */
+op_bit_n_r(4,l)     /* CB OPCODE: 0x65 */
+op_bit_n_r(4,a)     /* CB OPCODE: 0x67 */
+op_bit_n_r(5,b)     /* CB OPCODE: 0x68 */
+op_bit_n_r(5,c)     /* CB OPCODE: 0x69 */
+op_bit_n_r(5,d)     /* CB OPCODE: 0x6A */
+op_bit_n_r(5,e)     /* CB OPCODE: 0x6B */
+op_bit_n_r(5,h)     /* CB OPCODE: 0x6C */
+op_bit_n_r(5,l)     /* CB OPCODE: 0x6D */
+op_bit_n_r(5,a)     /* CB OPCODE: 0x6F */
+/* 0x7- CB OPCODES */
+op_bit_n_r(6,b)     /* CB OPCODE: 0x70 */
+op_bit_n_r(6,c)     /* CB OPCODE: 0x71 */
+op_bit_n_r(6,d)     /* CB OPCODE: 0x72 */
+op_bit_n_r(6,e)     /* CB OPCODE: 0x73 */
+op_bit_n_r(6,h)     /* CB OPCODE: 0x74 */
+op_bit_n_r(6,l)     /* CB OPCODE: 0x75 */
+op_bit_n_r(6,a)     /* CB OPCODE: 0x77 */
+op_bit_n_r(7,b)     /* CB OPCODE: 0x78 */
+op_bit_n_r(7,c)     /* CB OPCODE: 0x79 */
+op_bit_n_r(7,d)     /* CB OPCODE: 0x7A */
+op_bit_n_r(7,e)     /* CB OPCODE: 0x7B */
+op_bit_n_r(7,h)     /* CB OPCODE: 0x7C */
+op_bit_n_r(7,l)     /* CB OPCODE: 0x7D */
+op_bit_n_r(7,a)     /* CB OPCODE: 0x7F */
+#undef op_bit_n_r
+
+/* @TODO bit HL*/
+
+/**
+ * Define a function for resetting a specific bit in a register.
+ * op_res_n_r  [2  |  8] [- - - -]
+ */
+#define op_res_n_r(BIT, REG)                    \
+PRE_OP_FUNC res_##BIT##_##REG(LR35920_CPU *c) { \
+    /* @TODO Clock Handling */                  \
+    /* @TODO */                                 \
+}
+/* 0x8- CB OPCODES */
+op_res_n_r(0,b)     /* CB OPCODE: 0x80 */
+op_res_n_r(0,c)     /* CB OPCODE: 0x81 */
+op_res_n_r(0,d)     /* CB OPCODE: 0x82 */
+op_res_n_r(0,e)     /* CB OPCODE: 0x83 */
+op_res_n_r(0,h)     /* CB OPCODE: 0x84 */
+op_res_n_r(0,l)     /* CB OPCODE: 0x85 */
+op_res_n_r(0,a)     /* CB OPCODE: 0x87 */
+op_res_n_r(1,b)     /* CB OPCODE: 0x88 */
+op_res_n_r(1,c)     /* CB OPCODE: 0x89 */
+op_res_n_r(1,d)     /* CB OPCODE: 0x8A */
+op_res_n_r(1,e)     /* CB OPCODE: 0x8B */
+op_res_n_r(1,h)     /* CB OPCODE: 0x8C */
+op_res_n_r(1,l)     /* CB OPCODE: 0x8D */
+op_res_n_r(1,a)     /* CB OPCODE: 0x8F */
+/* 0x9- CB OPCODES */
+op_res_n_r(2,b)     /* CB OPCODE: 0x80 */
+op_res_n_r(2,c)     /* CB OPCODE: 0x81 */
+op_res_n_r(2,d)     /* CB OPCODE: 0x82 */
+op_res_n_r(2,e)     /* CB OPCODE: 0x83 */
+op_res_n_r(2,h)     /* CB OPCODE: 0x84 */
+op_res_n_r(2,l)     /* CB OPCODE: 0x85 */
+op_res_n_r(2,a)     /* CB OPCODE: 0x87 */
+op_res_n_r(3,b)     /* CB OPCODE: 0x88 */
+op_res_n_r(3,c)     /* CB OPCODE: 0x89 */
+op_res_n_r(3,d)     /* CB OPCODE: 0x8A */
+op_res_n_r(3,e)     /* CB OPCODE: 0x8B */
+op_res_n_r(3,h)     /* CB OPCODE: 0x8C */
+op_res_n_r(3,l)     /* CB OPCODE: 0x8D */
+op_res_n_r(3,a)     /* CB OPCODE: 0x8F */
+/* 0xA- CB OPCODES */
+op_res_n_r(4,b)     /* CB OPCODE: 0xA0 */
+op_res_n_r(4,c)     /* CB OPCODE: 0xA1 */
+op_res_n_r(4,d)     /* CB OPCODE: 0xA2 */
+op_res_n_r(4,e)     /* CB OPCODE: 0xA3 */
+op_res_n_r(4,h)     /* CB OPCODE: 0xA4 */
+op_res_n_r(4,l)     /* CB OPCODE: 0xA5 */
+op_res_n_r(4,a)     /* CB OPCODE: 0xA7 */
+op_res_n_r(5,b)     /* CB OPCODE: 0xA8 */
+op_res_n_r(5,c)     /* CB OPCODE: 0xA9 */
+op_res_n_r(5,d)     /* CB OPCODE: 0xAA */
+op_res_n_r(5,e)     /* CB OPCODE: 0xAB */
+op_res_n_r(5,h)     /* CB OPCODE: 0xAC */
+op_res_n_r(5,l)     /* CB OPCODE: 0xAD */
+op_res_n_r(5,a)     /* CB OPCODE: 0xAF */
+/* 0xB- CB OPCODES */
+op_res_n_r(6,b)     /* CB OPCODE: 0xB0 */
+op_res_n_r(6,c)     /* CB OPCODE: 0xB1 */
+op_res_n_r(6,d)     /* CB OPCODE: 0xB2 */
+op_res_n_r(6,e)     /* CB OPCODE: 0xB3 */
+op_res_n_r(6,h)     /* CB OPCODE: 0xB4 */
+op_res_n_r(6,l)     /* CB OPCODE: 0xB5 */
+op_res_n_r(6,a)     /* CB OPCODE: 0xB7 */
+op_res_n_r(7,b)     /* CB OPCODE: 0xB8 */
+op_res_n_r(7,c)     /* CB OPCODE: 0xB9 */
+op_res_n_r(7,d)     /* CB OPCODE: 0xBA */
+op_res_n_r(7,e)     /* CB OPCODE: 0xBB */
+op_res_n_r(7,h)     /* CB OPCODE: 0xBC */
+op_res_n_r(7,l)     /* CB OPCODE: 0xBD */
+op_res_n_r(7,a)     /* CB OPCODE: 0xBF */
+#undef op_res_n_r
+
+/* @TODO RES HL */
+
+/**
+ * Define a function for setting a specific bit in a register.
+ * op_set_n_r  [2  |  8] [- - - -]
+ */
+#define op_set_n_r(BIT, REG)                    \
+PRE_OP_FUNC set_##BIT##_##REG(LR35920_CPU *c) { \
+    /* @TODO Clock Handling */                  \
+    /* @TODO */                                 \
+}
+/* 0xC- CB OPCODES */
+op_set_n_r(0,b)     /* CB OPCODE: 0xC0 */
+op_set_n_r(0,c)     /* CB OPCODE: 0xC1 */
+op_set_n_r(0,d)     /* CB OPCODE: 0xC2 */
+op_set_n_r(0,e)     /* CB OPCODE: 0xC3 */
+op_set_n_r(0,h)     /* CB OPCODE: 0xC4 */
+op_set_n_r(0,l)     /* CB OPCODE: 0xC5 */
+op_set_n_r(0,a)     /* CB OPCODE: 0xC7 */
+op_set_n_r(1,b)     /* CB OPCODE: 0xC8 */
+op_set_n_r(1,c)     /* CB OPCODE: 0xC9 */
+op_set_n_r(1,d)     /* CB OPCODE: 0xCA */
+op_set_n_r(1,e)     /* CB OPCODE: 0xCB */
+op_set_n_r(1,h)     /* CB OPCODE: 0xCC */
+op_set_n_r(1,l)     /* CB OPCODE: 0xCD */
+op_set_n_r(1,a)     /* CB OPCODE: 0xCF */
+/* 0xD- CB OPCODES */
+op_set_n_r(2,b)     /* CB OPCODE: 0xD0 */
+op_set_n_r(2,c)     /* CB OPCODE: 0xD1 */
+op_set_n_r(2,d)     /* CB OPCODE: 0xD2 */
+op_set_n_r(2,e)     /* CB OPCODE: 0xD3 */
+op_set_n_r(2,h)     /* CB OPCODE: 0xD4 */
+op_set_n_r(2,l)     /* CB OPCODE: 0xD5 */
+op_set_n_r(2,a)     /* CB OPCODE: 0xD7 */
+op_set_n_r(3,b)     /* CB OPCODE: 0xD8 */
+op_set_n_r(3,c)     /* CB OPCODE: 0xD9 */
+op_set_n_r(3,d)     /* CB OPCODE: 0xDA */
+op_set_n_r(3,e)     /* CB OPCODE: 0xDB */
+op_set_n_r(3,h)     /* CB OPCODE: 0xDC */
+op_set_n_r(3,l)     /* CB OPCODE: 0xDD */
+op_set_n_r(3,a)     /* CB OPCODE: 0xDF */
+/* 0xE- CB OPCODES */
+op_set_n_r(4,b)     /* CB OPCODE: 0xE0 */
+op_set_n_r(4,c)     /* CB OPCODE: 0xE1 */
+op_set_n_r(4,d)     /* CB OPCODE: 0xE2 */
+op_set_n_r(4,e)     /* CB OPCODE: 0xE3 */
+op_set_n_r(4,h)     /* CB OPCODE: 0xE4 */
+op_set_n_r(4,l)     /* CB OPCODE: 0xE5 */
+op_set_n_r(4,a)     /* CB OPCODE: 0xE7 */
+op_set_n_r(5,b)     /* CB OPCODE: 0xE8 */
+op_set_n_r(5,c)     /* CB OPCODE: 0xE9 */
+op_set_n_r(5,d)     /* CB OPCODE: 0xEA */
+op_set_n_r(5,e)     /* CB OPCODE: 0xEB */
+op_set_n_r(5,h)     /* CB OPCODE: 0xEC */
+op_set_n_r(5,l)     /* CB OPCODE: 0xED */
+op_set_n_r(5,a)     /* CB OPCODE: 0xEF */
+/* 0xF- CB OPCODES */
+op_set_n_r(6,b)     /* CB OPCODE: 0xF0 */
+op_set_n_r(6,c)     /* CB OPCODE: 0xF1 */
+op_set_n_r(6,d)     /* CB OPCODE: 0xF2 */
+op_set_n_r(6,e)     /* CB OPCODE: 0xF3 */
+op_set_n_r(6,h)     /* CB OPCODE: 0xF4 */
+op_set_n_r(6,l)     /* CB OPCODE: 0xF5 */
+op_set_n_r(6,a)     /* CB OPCODE: 0xF7 */
+op_set_n_r(7,b)     /* CB OPCODE: 0xF8 */
+op_set_n_r(7,c)     /* CB OPCODE: 0xF9 */
+op_set_n_r(7,d)     /* CB OPCODE: 0xFA */
+op_set_n_r(7,e)     /* CB OPCODE: 0xFB */
+op_set_n_r(7,h)     /* CB OPCODE: 0xFC */
+op_set_n_r(7,l)     /* CB OPCODE: 0xFD */
+op_set_n_r(7,a)     /* CB OPCODE: 0xFF */
+#undef op_set_n_r
+
+/* @TODO set HL */
 
 #undef PRE_OP_FUNC
 
@@ -409,7 +955,7 @@ LR35902_OP_FN opCB[256] = {
  */
 void exec_op(void)
 {
-    uint8 opcode = 0x00;//op_read(r.pc++);
-    op[opcode]();
+    uint8 opcode = 0x00;//mem_read(c->r.pc++);
+    (op[opcode])();
 }
 
