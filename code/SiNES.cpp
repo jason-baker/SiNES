@@ -2,9 +2,9 @@
  * Copyright 2013 Jason M. Baker
  */
 
-#include "platform.h"
-#include "SiNES_types.h"
-#include "LR35902\ops.h"
+#include "xplat/platform.hpp"
+#include "xplat/types.hpp"
+#include "Processors/Nintendo/LR35902/LR35902.hpp"
 #include <stdio.h>
 
 typedef struct _MEDIA {
@@ -53,7 +53,7 @@ int main(char **argv, int argc)
     log("Details From Media");
     log("media.hasHeader: %s", BTS(media.hasHeader));
 
-    exec_op();
+    //exec_op();
 
     return 0;
 }

@@ -1,26 +1,25 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
-PROJECT(SiNES C CXX)
+PROJECT(SiNES CXX)
 
 INCLUDE_DIRECTORIES(
-    processors
-    processors/Nintendo
-    processors/Nintendo/5A22
-    xplat
+    code
 )
 
 # List of header files.
 SET(include
-    xplat/SiNES_types.h
-    xplat/platform.h
-    processors/Nintendo/LR35902/cpu.h
-    processors/Nintendo/LR35902/ops.h
-    processors/Nintendo/LR35902/registers.h
+    code/SiNES.hpp
+    code/xplat/types.hpp
+    code/xplat/platform.hpp
+    #processors/Nintendo/LR35902/cpu.h
+	code/processors/Processor.hpp
+    code/processors/Nintendo/LR35902/LR35902.hpp
+    #processors/Nintendo/LR35902/registers.h
 )
 
 # List of source files.
 SET(src
-    SiNES.c
-    processors/Nintendo/LR35902/ops.c
+    code/SiNES.cpp
+    code/processors/Nintendo/LR35902/LR35902.cpp
 )
 
 # Generate the executable

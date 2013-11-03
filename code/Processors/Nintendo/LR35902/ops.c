@@ -38,6 +38,13 @@ C - Carry Flag      : Set if a carry occurred from the last math operation or re
 | @TODO                                                                                                       |
 \*********************************************************************************************************************/
 
+/**
+ * Throw an error if an invalid op is ever called
+ */
+PRE_OP_FUNC INVALID(LR35920_CPU *c) {
+    /* @TODO */
+}
+
 // 0x00     nop         [1  |  4] [- - - -]
 PRE_OP_FUNC nop(LR35920_CPU *c) {
     /* @TODO CLOCK HANDLING */
@@ -89,26 +96,86 @@ PRE_OP_FUNC ret_nc(LR35920_CPU *c) {
     /* @TODO */
 }
 
-// 0xC2     jp_nz      [3  |16/12] [- - - -]
+// 0xC2     jp_nz       [3  |16/12] [- - - -]
 PRE_OP_FUNC jp_nz(LR35920_CPU *c) {
     /* @TODO CLOCK HANDLING */
     /* @TODO */
 }
 
-// 0xD2     jp_nc      [3  |16/12] [- - - -]
+// 0xD2     jp_nc       [3  |16/12] [- - - -]
 PRE_OP_FUNC jp_nc(LR35920_CPU *c) {
     /* @TODO CLOCK HANDLING */
     /* @TODO */
 }
 
-// 0xC3     call_nz    [3  |24/12] [- - - -]
+// 0xC3     call_nz     [3  |24/12] [- - - -]
 PRE_OP_FUNC call_nz(LR35920_CPU *c) {
     /* @TODO CLOCK HANDLING */
     /* @TODO */
 }
 
-// 0xD3     call_nc    [3  |24/12] [- - - -]
+// 0xD3     call_nc     [3  |24/12] [- - - -]
 PRE_OP_FUNC call_nc(LR35920_CPU *c) {
+    /* @TODO CLOCK HANDLING */
+    /* @TODO */
+}
+
+// 0xCC     call_z      [3  |24/12] [- - - -]
+PRE_OP_FUNC call_z(LR35920_CPU *c) {
+    /* @TODO CLOCK HANDLING */
+    /* @TODO */
+}
+
+// 0xDC     call_c      [3  |24/12] [- - - -]
+PRE_OP_FUNC call_c(LR35920_CPU *c) {
+    /* @TODO CLOCK HANDLING */
+    /* @TODO */
+}
+
+// 0xCD     call        [3  | 24] [- - - -]
+PRE_OP_FUNC call(LR35920_CPU *c) {
+    /* @TODO CLOCK HANDLING */
+    /* @TODO */
+}
+
+// 0xC8     ret_z       [1  |20/8] [- - - -]
+PRE_OP_FUNC ret_z(LR35920_CPU *c) {
+    /* @TODO CLOCK HANDLING */
+    /* @TODO */
+}
+
+// 0xD8     ret_c       [1  |20/8] [- - - -]
+PRE_OP_FUNC ret_c(LR35920_CPU *c) {
+    /* @TODO CLOCK HANDLING */
+    /* @TODO */
+}
+
+// 0xC9     ret         [1  | 16] [- - - -]
+PRE_OP_FUNC ret(LR35920_CPU *c) {
+    /* @TODO CLOCK HANDLING */
+    /* @TODO */
+}
+
+// 0xD9     reti        [1  | 16] [- - - -]
+PRE_OP_FUNC reti(LR35920_CPU *c) {
+    /* @TODO CLOCK HANDLING */
+    /* @TODO */
+}
+
+// 0xE9     jp_hl       [1  |  4] [- - - -]
+PRE_OP_FUNC jp_hl(LR35920_CPU *c) {
+    /* @TODO CLOCK HANDLING */
+    /* @TODO */
+}
+
+// 0xCA     jp_z        [1  |16/12] [- - - -]
+PRE_OP_FUNC jp_z(LR35920_CPU *c) {
+    /* @TODO CLOCK HANDLING */
+    /* @TODO */
+}
+
+// 0xDA     jp_c        [1  |16/12] [- - - -]
+PRE_OP_FUNC jp_c(LR35920_CPU *c) {
     /* @TODO CLOCK HANDLING */
     /* @TODO */
 }
@@ -117,20 +184,21 @@ PRE_OP_FUNC call_nc(LR35920_CPU *c) {
  * Define a function for pushing present address onto stack and jumping to offset
  * op_rst_nnh    [2  | 16] [- - - -]
  */
-#define op_rst_nnh(OFFSET)                      \
+#define op_rst_nn(OFFSET)                       \
 PRE_OP_FUNC rst_##OFFSET##h(LR35920_CPU *c) {   \
     /* @TODO CLOCK HANDLING */                  \
-    /*  */                                      \
+    /* @TODO  */                                \
 }
-op_rst_nnh(00)      /* OPCODE: 0xC7 */
-op_rst_nnh(08)      /* OPCODE: 0xCF */
-op_rst_nnh(10)      /* OPCODE: 0xD7 */
-op_rst_nnh(18)      /* OPCODE: 0xCF */
-op_rst_nnh(20)      /* OPCODE: 0xE7 */
-op_rst_nnh(28)      /* OPCODE: 0xEF */
-op_rst_nnh(30)      /* OPCODE: 0xF7 */
-op_rst_nnh(38)      /* OPCODE: 0xFF */
-#undef op_rst_nnh
+op_rst_nn(00)      /* OPCODE: 0xC7 */
+op_rst_nn(08)      /* OPCODE: 0xCF */
+op_rst_nn(10)      /* OPCODE: 0xD7 */
+op_rst_nn(18)      /* OPCODE: 0xCF */
+op_rst_nn(20)      /* OPCODE: 0xE7 */
+op_rst_nn(28)      /* OPCODE: 0xEF */
+op_rst_nn(30)      /* OPCODE: 0xF7 */
+op_rst_nn(38)      /* OPCODE: 0xFF */
+#undef op_rst_nn
+
 
 /*********************************************************************************************************************\
 | 8 Bit Load Commands                                                                                                 |
@@ -910,6 +978,7 @@ op_set_n_r(7,a)     /* CB OPCODE: 0xFF */
 
 #undef PRE_OP_FUNC
 
+#if 0
 LR35902_OP_FN op[256] = {
 /*          0x-0        0x-1        0x-2        0x-3        0x-4        0x-5        0x-6        0x-7        0x-8        0x-9        0x-A        0x-B        0x-C        0x-D        0x-E        0x-F */
 /*0x0-*/    nop,        ld_bc_nn,   ld_bc_a,    inc_bc,     inc_b,      dec_b,      ld_b_n,     rlca,       ld_nn_sp,   add_hl_bc,  ld_a_bc,    dec_bc,     inc_c,      dec_c,      ld_c_n,     rrca,
@@ -926,13 +995,13 @@ LR35902_OP_FN op[256] = {
 /*0xB-*/    or_b,       or_c,       or_d,       or_e,       or_h,       or_l,       or_hl,      or_a,       cp_b,       cp_c,       cp_d,       cp_e,       cp_h,       cp_l,       cp_hl,      cp_a,
 /*0xC-*/    ret_nz,     pop_bc,     jp_nz,      jp,         call_nz,    push_bc,    add_a_d8,   rst_00h,    ret_z,      ret,        jp_z,       prefix_cb,  call_z_a16, call_a16,   adc_a_d8,   rst_08h,
 /*0xD-*/    ret_nc,     pop_de,     jp_nc,      INVALID,    call_nc,    push_de,    sub_d8,     rst_10h,    ret_c,      reti,       jp_c,       INVALID,    call_c_a16, INVALID,    sbc_d8,     rst_18h,
-/*0xE-*/    ldh_0a_a,   pop_hl,     ld_0c_a,    INVALID,    INVALID,    push_hl,    and_d8,     rst_20h,    add_sp_r8,  jp_0hl,     ld_0a16_a,  INVALID,    INVALID,    INVALID,    xor_d8,     rst_28h,
+/*0xE-*/    ldh_0a_a,   pop_hl,     ld_0c_a,    INVALID,    INVALID,    push_hl,    and_d8,     rst_20h,    add_sp_r8,  jp_hl,      ld_0a16_a,  INVALID,    INVALID,    INVALID,    xor_d8,     rst_28h,
 /*0xF-*/    ldh_a_0a,   pop_af,     ld_a_0c,    di,         INVALID,    push_af,    or_d8,      rst_30h,    ldhl_sp_r8, ld_sp_hl,   ld_a_0a16,  ei,         INVALID,    INVALID,    cp_d8,      rst_38h,
 };
 
 LR35902_OP_FN opCB[256] = {
 /*          0x-0        0x-1        0x-2        0x-3        0x-4        0x-5        0x-6        0x-7        0x-8        0x-9        0x-A        0x-B        0x-C        0x-D        0x-E        0x-F */
-/*0x0-*/    rlc_b,      rlc_c,      rlc_d,      rlc_e,      rlc_h,      rlc_l,      rlc_hl,     rlc_a,      rrc_b,      rrc_c,      rrc_d,      rrc_e,      rrc_h,      rrc_l,      rrc_hl,     rrc_a,
+/*0x0-*/    rlc_b,      rlc_c1,      rlc_d,      rlc_e,      rlc_h,      rlc_l,      rlc_hl,     rlc_a,      rrc_b,      rrc_c,      rrc_d,      rrc_e,      rrc_h,      rrc_l,      rrc_hl,     rrc_a,
 /*0x1-*/    rl_b,       rl_c,       rl_d,       rl_e,       rl_h,       rl_l,       rl_hl,      rl_a,       rr_b,       rr_c,       rr_d,       rr_e,       rr_l,       rr_l,       rr_hl,      rr_a,
 /*0x2-*/    sla_b,      sla_c,      sla_d,      sla_e,      sla_h,      sla_l,      sla_hl,     sla_a,      sra_b,      sra_c,      sra_d,      sra_e,      sra_h,      sra_l,      sra_hl,     sra_a,
 /*0x3-*/    swap_b,     swap_c,     swap_d,     swap_e,     swap_h,     swap_l,     swap_hl,    swap_a,     srl_b,      srl_c,      srl_d,      srl_e,      srl_h,      srl_l,      srl_hl,     srl_c,
@@ -949,6 +1018,11 @@ LR35902_OP_FN opCB[256] = {
 /*0xE-*/    set_4_b,    set_4_c,    set_4_d,    set_4_e,    set_4_h,    set_4_l,    set_4_hl,   set_4_a,    set_5_b,    set_5_c,    set_5_d,    set_5_e,    set_5_h,    set_5_l,    set_5_hl,   set_5_a,
 /*0xF-*/    set_6_b,    set_6_c,    set_6_d,    set_6_e,    set_6_h,    set_6_l,    set_6_hl,   set_6_a,    set_7_b,    set_7_c,    set_7_d,    set_7_e,    set_7_h,    set_7_l,    set_7_hl,   set_7_a,
 };
+#endif
+
+PRE_OP_FUNC op_rlc(value)
+{
+}
 
 /**
  * Execute an operation.
@@ -956,6 +1030,6 @@ LR35902_OP_FN opCB[256] = {
 void exec_op(void)
 {
     uint8 opcode = 0x00;//mem_read(c->r.pc++);
-    (op[opcode])();
+    //(op[opcode])();
 }
 
