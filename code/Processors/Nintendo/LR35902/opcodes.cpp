@@ -675,5 +675,137 @@ void LR35902::dec_rr(uint16 &reg)
 | CBX Commands                                                                                                        |
 \*********************************************************************************************************************/
 
+/* rlc_r        [2  |     8] [Z 0 0 C] */
+void LR35902::rlc_r(uint8 &reg)
+{
+    /* @TODO */
+}
+
+/* rlc_hl       [2  |    16] [Z 0 0 C] */
+void LR35902::rlc_hl()
+{
+    /* @TODO */
+}
+
+/* rl_r         [2  |     8] [Z 0 0 C] */
+void LR35902::rl_r(uint8 &reg)
+{
+    /* @TODO */
+}
+
+/* rl_hl        [2  |    16] [Z 0 0 C] */
+void LR35902::rl_hl()
+{
+    /* @TODO */
+}
+
+/* rrc_r        [2  |     8] [Z 0 0 C] */
+void LR35902::rrc_r(uint8 &reg)
+{
+    /* @TODO */
+}
+
+/* rrc_hl       [2  |    16] [Z 0 0 C] */
+void LR35902::rrc_hl()
+{
+    /* @TODO */
+}
+
+/* rr_r         [2  |     8] [Z 0 0 C] */
+void LR35902::rr_r(uint8 &reg)
+{
+    /* @TODO */
+}
+
+/* rr_hl        [2  |    16] [Z 0 0 C] */
+void LR35902::rr_hl()
+{
+    /* @TODO */
+}
+
+/* sla_r        [2  |     8] [Z 0 0 C] */
+void LR35902::sla_r(uint8 &reg)
+{
+    /* @TODO */
+}
+
+/* sla_hl       [2  |    16] [Z 0 0 C] */
+void LR35902::sla_hl()
+{
+    /* @TODO */
+}
+
+/* sra_r        [2  |     8] [Z 0 0 0] */
+void LR35902::sra_r(uint8 &reg)
+{
+    /* @TODO */
+}
+
+/* sra_hl       [2  |    16] [Z 0 0 0] */
+void LR35902::sra_hl()
+{
+    /* @TODO */
+}
+
+/* srl_r        [2  |     8] [Z 0 0 C] */
+void LR35902::srl_r(uint8 &reg)
+{
+    /* @TODO */
+}
+
+/* srl_hl       [2  |    16] [Z 0 0 C] */
+void LR35902::srl_hl()
+{
+    /* @TODO */
+}
+
+/* swap_r       [2  |     8] [Z 0 0 0] */
+void LR35902::swap_r(uint8 &reg)
+{
+    /* @TODO */
+}
+
+/* swap_hl      [2  |    16] [Z 0 0 0] */
+void LR35902::swap_hl()
+{
+    /* @TODO */
+}
+
+/* bit          [2  |     8] [Z 0 1 -] */
+void LR35902::bit_b_r(uint8 bit, uint8 &reg)
+{
+    /* @TODO */
+}
+
+/* bit_hl       [2  |    16] [Z 0 1 -] */
+void LR35902::bit_b_hl(uint8 bit)
+{
+    /* @TODO */
+}
+
+/* res          [2  |     8] [- - - -] */
+void LR35902::res_b_r(uint8 bit, uint8 &reg)
+{
+    /* @TODO */
+}
+
+/* res_hl       [2  |    16] [- - - -] */
+void LR35902::res_b_hl(uint8 bit)
+{
+    /* @TODO */
+}
+
+/* set          [2  |     8] [- - - -] */
+void LR35902::set_b_r(uint8 bit, uint8 &reg)
+{
+    /* @TODO */
+}
+
+/* set_hl       [2  |    16] [Z 0 1 -] */
+void LR35902::set_b_hl(uint8 bit)
+{
+    /* @TODO */
+}
+
 #undef PRE_OP_FUNC
 

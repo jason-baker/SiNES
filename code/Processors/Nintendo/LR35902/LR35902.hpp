@@ -639,6 +639,173 @@ namespace SiNES { namespace Processors { namespace Nintendo {
          */
         void add_sp_n();
 
+        /************************\
+        |* CB Prefix Operations *|
+        \************************/
+
+        /**
+         * Rotate register left. Old bit 7 to carry flag.
+         * rlc_r        [2  |     8] [Z 0 0 C]
+         *
+         * @param reg       [IN]        Register to operate on.
+         */
+        void rlc_r(uint8 &reg);
+
+        /**
+         * Rotate (HL) left. Old bit 7 to carry flag.
+         * rlc_hl       [2  |    16] [Z 0 0 C]
+         */
+        void rlc_hl();
+
+        /**
+         * Rotate register left through carry
+         * rl_r         [2  |     8] [Z 0 0 C]
+         *
+         * @param reg       [IN]        Register to operate on.
+         */
+        void rl_r(uint8 &reg);
+
+        /**
+         * Rotate (HL) left through carry.
+         * rl_hl        [2  |    16] [Z 0 0 C]
+         */
+        void rl_hl();
+
+        /**
+         * Rotate register right. Old bit 7 to carry flag.
+         * rrc_r        [2  |     8] [Z 0 0 C]
+         *
+         * @param reg       [IN]        Register to operate on.
+         */
+        void rrc_r(uint8 &reg);
+
+        /**
+         * Rotate (HL) right. Old bit 7 to carry flag.
+         * rrc_hl       [2  |    16] [Z 0 0 C]
+         */
+        void rrc_hl();
+
+        /**
+         * Rotate register right through carry
+         * rr_r         [2  |     8] [Z 0 0 C]
+         *
+         * @param reg       [IN]        Register to operate on.
+         */
+        void rr_r(uint8 &reg);
+
+        /**
+         * Rotate (HL) right through carry.
+         * rr_hl        [2  |    16] [Z 0 0 C]
+         */
+        void rr_hl();
+
+        /**
+         * Shift register left into carry. LSB set to 0.
+         * sla_r        [2  |     8] [Z 0 0 C]
+         *
+         * @param reg       [IN]        Register to operate on.
+         */
+        void sla_r(uint8 &reg);
+
+        /**
+         * Shift (HL) left into carry. LSB set to 0.
+         * sla_hl       [2  |    16] [Z 0 0 C]
+         */
+        void sla_hl();
+
+        /**
+         * Shift register right into carry. MSB unchanged.
+         * sra_r        [2  |     8] [Z 0 0 0]
+         *
+         * @param reg       [IN]        Register to operate on.
+         */
+        void sra_r(uint8 &reg);
+
+        /**
+         * Shift (HL) right into carry. MSB set to 0.
+         * sra_hl       [2  |    16] [Z 0 0 0]
+         */
+        void sra_hl();
+
+        /**
+         * Shift register right into carry. MSB set to 0.
+         * srl_r        [2  |     8] [Z 0 0 C]
+         *
+         * @param reg       [IN]        Register to operate on.
+         */
+        void srl_r(uint8 &reg);
+
+        /**
+         * Shift (HL) right into carry. MSB set to 0.
+         * srl_hl       [2  |    16] [Z 0 0 C]
+         */
+        void srl_hl();
+
+        /**
+         * Swap upper and lower nibbles of the register.
+         * swap_r       [2  |     8] [Z 0 0 0]
+         *
+         * @param reg       [IN]        Register to operate on.
+         */
+        void swap_r(uint8 &reg);
+
+        /**
+         * Swap upper and lower nibbles of the register.
+         * swap_hl      [2  |    16] [Z 0 0 0]
+         */
+        void swap_hl();
+
+        /**
+         * Test bit in a given register.
+         * bit          [2  |     8] [Z 0 1 -]
+         *
+         * @param bit       [IN]        Bit position to operate on.
+         * @param reg       [IN]        Register to operate on.
+         */
+        void bit_b_r(uint8 bit, uint8 &reg);
+
+        /**
+         * Test bit in (HL).
+         * bit_hl       [2  |    16] [Z 0 1 -]
+         *
+         * @param bit       [IN]        Bit position to operate on.
+         */
+        void bit_b_hl(uint8 bit);
+
+        /**
+         * Reset bit in a given register.
+         * res          [2  |     8] [- - - -]
+         *
+         * @param bit       [IN]        Bit position to operate on.
+         * @param reg       [IN]        Register to operate on.
+         */
+        void res_b_r(uint8 bit, uint8 &reg);
+
+        /**
+         * Test bit in (HL).
+         * res_hl       [2  |    16] [- - - -]
+         *
+         * @param bit       [IN]        Bit position to operate on.
+         */
+        void res_b_hl(uint8 bit);
+
+        /**
+         * Set bit in a given register.
+         * set          [2  |     8] [- - - -]
+         *
+         * @param bit       [IN]        Bit position to operate on.
+         * @param reg       [IN]        Register to operate on.
+         */
+        void set_b_r(uint8 bit, uint8 &reg);
+
+        /**
+         * Set bit in (HL).
+         * set_hl       [2  |    16] [Z 0 1 -]
+         *
+         * @param bit       [IN]        Bit position to operate on.
+         */
+        void set_b_hl(uint8 bit);
+
     private:
         /************************\
         |* Data Types           *|
