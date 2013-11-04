@@ -762,7 +762,7 @@ namespace SiNES { namespace Processors { namespace Nintendo {
          * @param bit       [IN]        Bit position to operate on.
          * @param reg       [IN]        Register to operate on.
          */
-        void bit_b_r(uint8 bit, uint8 &reg);
+        void bit_b_r(const uint8 bit, const uint8 &reg);
 
         /**
          * Test bit in (HL).
@@ -770,7 +770,7 @@ namespace SiNES { namespace Processors { namespace Nintendo {
          *
          * @param bit       [IN]        Bit position to operate on.
          */
-        void bit_b_hl(uint8 bit);
+        void bit_b_hl(const uint8 bit);
 
         /**
          * Reset bit in a given register.
@@ -779,7 +779,7 @@ namespace SiNES { namespace Processors { namespace Nintendo {
          * @param bit       [IN]        Bit position to operate on.
          * @param reg       [IN]        Register to operate on.
          */
-        void res_b_r(uint8 bit, uint8 &reg);
+        void res_b_r(const uint8 bit, uint8 &reg);
 
         /**
          * Test bit in (HL).
@@ -787,7 +787,7 @@ namespace SiNES { namespace Processors { namespace Nintendo {
          *
          * @param bit       [IN]        Bit position to operate on.
          */
-        void res_b_hl(uint8 bit);
+        void res_b_hl(const uint8 bit);
 
         /**
          * Set bit in a given register.
@@ -796,7 +796,7 @@ namespace SiNES { namespace Processors { namespace Nintendo {
          * @param bit       [IN]        Bit position to operate on.
          * @param reg       [IN]        Register to operate on.
          */
-        void set_b_r(uint8 bit, uint8 &reg);
+        void set_b_r(const uint8 bit, uint8 &reg);
 
         /**
          * Set bit in (HL).
@@ -804,7 +804,7 @@ namespace SiNES { namespace Processors { namespace Nintendo {
          *
          * @param bit       [IN]        Bit position to operate on.
          */
-        void set_b_hl(uint8 bit);
+        void set_b_hl(const uint8 bit);
 
     private:
         /************************\

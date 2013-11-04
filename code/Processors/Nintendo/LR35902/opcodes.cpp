@@ -23,10 +23,7 @@ C - Carry Flag      : Set if a carry occurred from the last math operation or re
 
 /* Calculate flags */
 //#define CALC_Z_N_H(Z, N, H)         (((Z ? 0x04 : 0x00) | (N ? 0x02 : 0x00) | (H ? 0x01 : 0x00)) << (7-3+1))
-//#define CALC_Z_N_H_C(Z, N, H, C)    (((Z ? 0x08 : 0x00) | (N ? 0x04 : 0x00) | (H ? 0x02 : 0x00) | (C ? 0x01 : 0x00)) << (7-4+1))
-
-/* Split a 16 byte register into 2 8 bit parameter registers. */
-#define SPLIT_BYTES(REG) 
+#define CALC_Z_N_H_C(Z, N, H, C)    ((Z ? LR35902_FLAG_ZERO : 0x00) | (N ? LR35902_FLAG_SUBTRACT : 0x00) | (H ? LR35902_FLAG_HALF_CARRY : 0x00) | (C ? LR35902_FLAG_CARRY : 0x00))
 
 /* Optimizations for rotations. */
 #define ROTATE_LEFT(VALUE) (((VALUE) << 1) | (VALUE) >> (sizeof(VALUE) - 1))
@@ -772,39 +769,45 @@ void LR35902::swap_hl()
 }
 
 /* bit          [2  |     8] [Z 0 1 -] */
-void LR35902::bit_b_r(uint8 bit, uint8 &reg)
+void LR35902::bit_b_r(uint8 bit, const uint8 &reg)
 {
-    /* @TODO */
+    this->r.f = CALC_Z_N_H_C(reg & (1 << bit), 0, 1, this->r.f & LR35902_FLAG_CARRY);
 }
 
 /* bit_hl       [2  |    16] [Z 0 1 -] */
-void LR35902::bit_b_hl(uint8 bit)
+void LR35902::bit_b_hl(const uint8 bit)
 {
-    /* @TODO */
+    uint8 value = 0x00; /* @TODO read hl from memory. */
+    this->bit_b_r(bit, value);
+    /* @TODO Write value back to memory. */
 }
 
 /* res          [2  |     8] [- - - -] */
-void LR35902::res_b_r(uint8 bit, uint8 &reg)
+void LR35902::res_b_r(const uint8 bit, uint8 &reg)
 {
-    /* @TODO */
+    reg &= 0xFFFF ^ (1 << bit);
 }
 
 /* res_hl       [2  |    16] [- - - -] */
-void LR35902::res_b_hl(uint8 bit)
+void LR35902::res_b_hl(const uint8 bit)
 {
-    /* @TODO */
+    uint8 value = 0x00; /* @TODO read hl from memory. */
+    this->res_b_r(bit, value);
+    /* @TODO Write value back to memory. */
 }
 
 /* set          [2  |     8] [- - - -] */
-void LR35902::set_b_r(uint8 bit, uint8 &reg)
+void LR35902::set_b_r(const uint8 bit, uint8 &reg)
 {
-    /* @TODO */
+    reg |= (1 << bit);
 }
 
 /* set_hl       [2  |    16] [Z 0 1 -] */
-void LR35902::set_b_hl(uint8 bit)
+void LR35902::set_b_hl(const uint8 bit)
 {
-    /* @TODO */
+    uint8 value = 0x00; /* @TODO read hl from memory. */
+    this->set_b_r(bit, value);
+    /* @TODO Write value back to memory. */
 }
 
 #undef PRE_OP_FUNC
